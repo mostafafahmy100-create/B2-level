@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B2 — Mr Mostafa Nasar Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Figtree:wght@400;500;600;700;800&family=Cairo:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment:#FBF3DF;
+    --parchment-deep:#F3E8CA;
+    --ink:#1E2A3C;
+    --sky:#2E97D4;
+    --sky-deep:#1E6FA6;
+    --coral:#FF6F59;
+    --coral-deep:#E5503B;
+    --gold:#C9972B;
+    --green-ok:#3F9142;
+    --red-no:#C43B3B;
+    --paper-line: rgba(30,42,60,0.08);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      repeating-linear-gradient(180deg, transparent 0 38px, var(--paper-line) 38px 39px),
+      var(--parchment);
+    color:var(--ink);
+    font-family:'Figtree', sans-serif;
+    min-height:100vh;
+  }
+  .ar{ font-family:'Cairo', sans-serif; direction:rtl; }
+  h1,h2,h3,.display{ font-family:'Fraunces', serif; }
+
+  /* ===== Top passport strip ===== */
+  header.cover{
+    background:linear-gradient(135deg, var(--sky-deep), var(--sky) 60%, var(--coral));
+    padding:22px 16px 60px;
+    position:relative;
+    overflow:hidden;
+  }
+  header.cover::after{
+    content:"";
+    position:absolute; inset:0;
+    background-image: radial-gradient(circle at 12% 20%, rgba(255,255,255,0.14) 0, transparent 40%),
+                       radial-gradient(circle at 85% 75%, rgba(255,255,255,0.10) 0, transparent 45%);
+  }
+  .cover-inner{
+    position:relative; z-index:1;
+    max-width:1080px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;
+  }
+  .brand{ display:flex; align-items:center; gap:14px; color:#fff; }
+  .brand .stamp-logo{
+    width:56px; height:56px; border-radius:50%;
+    border:3px solid rgba(255,255,255,0.85);
+    display:flex; align-items:center; justify-content:center;
+    font-size:26px; background:rgba(255,255,255,0.12);
+    transform:rotate(-8deg);
+  }
+  .brand-text .eyebrow{ letter-spacing:.14em; text-transform:uppercase; font-size:12px; opacity:.85; font-weight:700;}
+  .brand-text h1{ margin:2px 0 0; font-size:26px; font-weight:700; line-height:1.1;}
+  .brand-text .ar{ font-size:14px; opacity:.9; margin-top:2px;}
+
+  .passport-meta{ color:#fff; text-align:right; font-size:13px; opacity:.9; }
+  .passport-meta b{ display:block; font-size:22px; font-family:'Fraunces',serif; }
+
+  nav.tabs{
+    max-width:1080px; margin:-40px auto 0; padding:0 16px;
+    position:relative; z-index:2;
+  }
+  .tabs-scroll{
+    display:flex; gap:10px; overflow-x:auto; padding:10px 4px 18px;
+    scrollbar-width:none;
+  }
+  .tabs-scroll::-webkit-scrollbar{ display:none; }
+  .tab-btn{
+    flex:0 0 auto;
+    background:#fff; border:2px solid var(--parchment-deep);
+    border-radius:16px; padding:10px 14px;
+    display:flex; align-items:center; gap:8px;
+    cursor:pointer; font-weight:700; font-size:13.5px; color:var(--ink);
+    box-shadow:0 4px 10px rgba(30,42,60,0.10);
+    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    white-space:nowrap;
+  }
+  .tab-btn:hover{ transform:translateY(-2px); box-shadow:0 8px 16px rgba(30,42,60,0.16); }
+  .tab-btn.active{ border-color:var(--coral); background:linear-gradient(180deg,#fff,#FFF3EF); }
+  .tab-icon{ font-size:18px; }
+  .tab-stamp{
+    width:18px; height:18px; border-radius:50%; background:var(--green-ok);
+    color:#fff; font-size:11px; display:flex; align-items:center; justify-content:center;
+    font-weight:800; flex:0 0 auto;
+  }
+
+  main{ max-width:880px; margin:0 auto; padding:8px 16px 80px; }
+
+  /* ===== Home / passport page ===== */
+  .home-card{
+    background:#fff; border-radius:22px; padding:28px 24px;
+    box-shadow:0 10px 30px rgba(30,42,60,0.10);
+    border:1px solid var(--parchment-deep);
+  }
+  .home-card h2{ font-size:26px; margin:0 0 6px; }
+  .home-card p.lead{ margin:0 0 20px; color:#45536b; line-height:1.6; }
+  .stamp-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:14px; margin-top:8px; }
+  .stamp-slot{
+    border:2px dashed #cbb98a; border-radius:16px; padding:16px 10px; text-align:center;
+    background:repeating-linear-gradient(135deg, transparent 0 8px, rgba(201,151,43,0.05) 8px 16px);
+    transition:all .2s ease; cursor:pointer;
+  }
+  .stamp-slot:hover{ border-color:var(--sky); }
+  .stamp-slot.done{ border-style:solid; border-color:var(--green-ok); background:#F1FBF1; }
+  .stamp-slot .ic{ font-size:28px; display:block; margin-bottom:6px; }
+  .stamp-slot .lbl{ font-weight:700; font-size:12.5px; }
+  .stamp-slot .score{ font-size:11px; color:var(--green-ok); font-weight:700; margin-top:4px;}
+
+  /* ===== Unit layout ===== */
+  .unit{ background:#fff; border-radius:22px; padding:26px 24px 30px; box-shadow:0 10px 30px rgba(30,42,60,0.10); border:1px solid var(--parchment-deep); }
+  .unit-head{ display:flex; align-items:flex-start; gap:14px; margin-bottom:16px; }
+  .unit-head .badge{
+    width:46px; height:46px; border-radius:50%; background:linear-gradient(135deg,var(--sky),var(--sky-deep));
+    display:flex; align-items:center; justify-content:center; font-size:22px; color:#fff; flex:0 0 auto;
+  }
+  .unit-head.conv .badge{ background:linear-gradient(135deg,var(--coral),var(--coral-deep)); }
+  .unit-head h2{ margin:0; font-size:22px; }
+  .unit-head .kicker{ text-transform:uppercase; letter-spacing:.1em; font-size:11.5px; font-weight:800; color:var(--sky-deep); }
+  .unit-head.conv .kicker{ color:var(--coral-deep); }
+  .unit-head .ar-title{ font-size:13.5px; color:#5b6b84; margin-top:2px; }
+
+  .hint-bar{
+    display:flex; align-items:center; gap:8px; background:#EFF7FC; border:1px solid #d9edf9;
+    padding:8px 12px; border-radius:12px; font-size:13px; color:#2b5a78; margin-bottom:16px;
+  }
+
+  .passage{ font-size:16.5px; line-height:1.9; }
+  .passage p{ margin:0 0 14px; }
+  .vocab-word{
+    color:var(--coral-deep); font-weight:700; border-bottom:2px dotted var(--coral-deep);
+    cursor:pointer; padding:0 1px; position:relative;
+  }
+  .vocab-word:hover{ background:#FFF1EE; border-radius:4px; }
+  .vocab-word.playing{ background:#FFE1DA; }
+
+  .line{ margin:0 0 14px; display:flex; gap:10px; }
+  .line .speaker{ font-weight:800; color:var(--sky-deep); flex:0 0 auto; min-width:64px; }
+
+  .popup{
+    position:fixed; z-index:50; background:var(--ink); color:#fff; padding:10px 14px;
+    border-radius:12px; font-size:13.5px; max-width:240px; box-shadow:0 8px 20px rgba(0,0,0,0.25);
+    display:none; pointer-events:none;
+  }
+  .popup .en{ font-weight:700; margin-bottom:2px; }
+  .popup .ar{ font-size:14px; color:#FFE1B8; }
+  .popup:after{ content:""; position:absolute; bottom:-6px; left:20px; width:12px; height:12px; background:var(--ink); transform:rotate(45deg); }
+
+  .section-title{ font-family:'Fraunces',serif; font-size:18px; margin:26px 0 10px; display:flex; align-items:center; gap:8px;}
+  .section-title .dot{ width:8px; height:8px; border-radius:50%; background:var(--gold); }
+
+  .vocab-list{ display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px; }
+  .vocab-chip{
+    background:var(--parchment); border:1px solid var(--parchment-deep); border-radius:12px;
+    padding:10px 12px; cursor:pointer; transition:transform .12s ease;
+  }
+  .vocab-chip:hover{ transform:translateY(-2px); }
+  .vocab-chip .w{ font-weight:800; color:var(--sky-deep); }
+  .vocab-chip .a{ font-size:13.5px; color:#5b6b84; margin-top:2px; }
+
+  .quiz{ margin-top:8px; }
+  .q-item{ background:var(--parchment); border:1px solid var(--parchment-deep); border-radius:14px; padding:14px 16px; margin-bottom:12px; }
+  .q-item .q-text{ font-weight:700; margin-bottom:10px; }
+  .opt{ display:flex; align-items:center; gap:8px; padding:7px 10px; border-radius:10px; cursor:pointer; margin-bottom:4px; }
+  .opt:hover{ background:#fff; }
+  .opt input{ accent-color:var(--sky-deep); }
+  .opt.correct{ background:#E6F6E6; font-weight:700; }
+  .opt.wrong{ background:#FBE6E4; text-decoration:line-through; }
+
+  .check-btn{
+    background:linear-gradient(135deg,var(--coral),var(--coral-deep)); color:#fff; border:none;
+    padding:12px 22px; border-radius:14px; font-weight:800; font-size:15px; cursor:pointer;
+    box-shadow:0 6px 14px rgba(229,80,59,0.35); margin-top:8px;
+  }
+  .check-btn:hover{ filter:brightness(1.05); }
+  .result-banner{
+    margin-top:14px; padding:14px 16px; border-radius:14px; font-weight:800; display:none;
+    align-items:center; gap:10px;
+  }
+  .result-banner.show{ display:flex; }
+  .result-banner.good{ background:#E6F6E6; color:var(--green-ok); }
+  .result-banner.mid{ background:#FFF3D9; color:var(--gold); }
+  .result-banner.low{ background:#FBE6E4; color:var(--red-no); }
+
+  .nav-footer{ display:flex; justify-content:space-between; margin-top:22px; }
+  .foot-btn{
+    background:#fff; border:2px solid var(--parchment-deep); border-radius:12px; padding:10px 16px;
+    font-weight:700; cursor:pointer; color:var(--ink);
+  }
+  .foot-btn:hover{ border-color:var(--sky); }
+
+  footer.sign{ text-align:center; padding:26px 16px 40px; color:#7a8aa3; font-size:12.5px; }
+  footer.sign .ar{ font-size:12.5px; }
+
+  @media (max-width:600px){
+    .brand-text h1{ font-size:21px; }
+    .unit{ padding:20px 16px 24px; }
+    .line{ flex-direction:column; gap:2px; }
+    .line .speaker{ min-width:auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="cover">
+  <div class="cover-inner">
+    <div class="brand">
+      <div class="stamp-logo">🌍</div>
+      <div class="brand-text">
+        <div class="eyebrow">World Class Lesson · B2</div>
+        <h1>Mr Mostafa Nasar Learning</h1>
+        <div class="ar">رحلتك حول العالم لتعلّم الإنجليزية — مستوى B2</div>
+      </div>
+    </div>
+    <div class="passport-meta">
+      Passport progress
+      <b id="progressCount">0 / 8</b>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tabs-scroll" id="tabsScroll"></div>
+</nav>
+
+<main id="mainArea"></main>
+
+<div class="popup" id="popup">
+  <div class="en" id="popupEn"></div>
+  <div class="ar" id="popupAr"></div>
+</div>
+
+<footer class="sign">
+  B2 · Mr Mostafa Nasar Learning &nbsp;|&nbsp; <span class="ar">اضغط على أي كلمة ملوّنة لسماع نطقها ومعناها بالعربية</span>
+</footer>
+
+<script>
+/* ================= DATA ================= */
+function md(text){
+  // convert [[word|arabic]] to clickable span, keep plain text otherwise
+  return text.replace(/\[\[([^\|]+)\|([^\]]+)\]\]/g, function(m, w, a){
+    return '<span class="vocab-word" data-en="'+w+'" data-ar="'+a+'">'+w+'</span>';
+  });
+}
+
+const UNITS = [
+{
+  id:'r1', type:'reading', icon:'💼', kicker:'Reading 1', title:'The Rise of Remote Work',
+  arTitle:'صعود العمل عن بُعد',
+  paragraphs:[
+    "Over the past decade, remote work has moved from a rare privilege to a common way of life for millions of employees around the world. Companies that once insisted on strict office attendance have discovered that giving staff more [[flexibility|مرونة]] often leads to happier teams and, surprisingly, higher [[productivity|إنتاجية]]. Employees no longer need to spend hours stuck in traffic; without a daily [[commute|تنقّل يومي]], many report feeling less exhausted and more focused on their tasks.",
+    "However, working from home is not without its challenges. Some workers begin to feel [[isolated|معزول]] because they miss the casual conversations that naturally happen in an office. Video calls can help, but they rarely replace the energy of a shared physical space. Managers have had to find new ways to help teams [[collaborate|يتعاون]] effectively when everyone is scattered across different cities, or even different countries.",
+    "Looking ahead, most experts agree that a hybrid model, combining days at home with days in the office, will likely become the standard. This balance may offer the best of both worlds: the freedom of remote work and the human connection of face-to-face teamwork."
+  ],
+  vocab:[
+    ['flexibility','مرونة'],['productivity','إنتاجية'],['commute','تنقّل يومي'],['isolated','معزول'],['collaborate','يتعاون']
+  ],
+  questions:[
+    {q:"What benefit did companies discover from giving staff more flexibility?", opts:["Higher productivity and happier teams","Lower salaries","Shorter workdays for everyone","More office meetings"], c:0},
+    {q:"Why do some remote workers feel isolated?", opts:["They travel too much","They miss casual office conversations","They dislike video calls","They work too few hours"], c:1},
+    {q:"What have managers had to do for scattered teams?", opts:["Cancel all meetings","Reduce the number of employees","Find new ways to help teams collaborate","Move everyone to one city"], c:2},
+    {q:"What is the hybrid model mentioned in the text?", opts:["Working only from home","Working only in the office","A mix of home and office days","Working only on weekends"], c:2},
+    {q:"According to the passage, what does removing the daily commute do?", opts:["Makes employees more exhausted","Makes employees less exhausted and more focused","Has no effect at all","Increases traffic"], c:1}
+  ]
+},
+{
+  id:'r2', type:'reading', icon:'🌱', kicker:'Reading 2', title:'Climate Change and Our Future',
+  arTitle:'التغيّر المناخي ومستقبلنا',
+  paragraphs:[
+    "Scientists around the world continue to warn that human activity is pushing the planet toward a crisis. Rising global temperatures, melting ice caps, and more frequent natural disasters are direct [[consequences|نتائج]] of decades of burning fossil fuels. Factories, vehicles, and power plants release enormous amounts of [[emissions|انبعاثات]] into the atmosphere every single day, trapping heat and disrupting weather patterns that once seemed predictable.",
+    "Many regions are already suffering. Farmers in some countries face severe [[drought|جفاف]], watching their crops fail season after season, while coastal cities prepare for rising sea levels. In response, governments and businesses are being pushed to invest in [[renewable|متجدد]] sources of energy, such as solar panels and wind turbines, rather than relying on coal and oil.",
+    "Individuals also have a role to play. Choosing to walk instead of drive, reducing food waste, and supporting companies that follow [[sustainable|مستدام]] practices can all make a genuine difference. The challenge is enormous, but experts believe that if governments, businesses, and ordinary citizens act together, it is still possible to protect the planet for future generations."
+  ],
+  vocab:[
+    ['consequences','نتائج'],['emissions','انبعاثات'],['drought','جفاف'],['renewable','متجدد'],['sustainable','مستدام']
+  ],
+  questions:[
+    {q:"What are melting ice caps and natural disasters described as?", opts:["Rare accidents","Consequences of burning fossil fuels","Signs of a healthy planet","Unrelated events"], c:1},
+    {q:"What do factories and vehicles release daily?", opts:["Clean water","Large amounts of emissions","Renewable energy","Solar power"], c:1},
+    {q:"What problem do farmers face in some countries?", opts:["Too much rain","Severe drought","Falling food prices","Extra farmland"], c:1},
+    {q:"What are governments being pushed to invest in?", opts:["More coal power plants","Renewable energy sources","Larger factories","More vehicles"], c:1},
+    {q:"Which of these is given as an example of sustainable individual action?", opts:["Wasting more food","Driving more often","Reducing food waste","Ignoring the problem"], c:2}
+  ]
+},
+{
+  id:'r3', type:'reading', icon:'🧳', kicker:'Reading 3', title:'The Power of Travel',
+  arTitle:'قوة السفر',
+  paragraphs:[
+    "Few experiences change a person as deeply as travel. Stepping outside familiar surroundings and visiting a new country can [[broaden|يوسّع]] the mind in ways that books and classrooms simply cannot. Meeting people from different backgrounds forces travellers to question assumptions they never realised they had, and to see their own culture from an outside perspective.",
+    "Of course, adjusting to a new place is not always easy. Many travellers experience what is commonly called [[culture shock|صدمة ثقافية]], a feeling of confusion or discomfort caused by unfamiliar customs, food, or language. This feeling usually fades after a few days, once visitors begin to [[immerse|ينغمس]] themselves in daily life, trying local dishes, learning a few words of the language, and observing how people interact.",
+    "Before setting off, most travellers prepare a rough [[itinerary|خط سير الرحلة]], listing the cities they hope to visit and the sights they do not want to miss. Along the way, many also collect a small [[souvenir|تذكار]] from each destination, a simple object that later brings back vivid memories of the journey. In the end, travel teaches patience, curiosity, and above all, an appreciation for how wide and varied the world truly is."
+  ],
+  vocab:[
+    ['broaden','يوسّع'],['culture shock','صدمة ثقافية'],['immerse','ينغمس'],['itinerary','خط سير الرحلة'],['souvenir','تذكار']
+  ],
+  questions:[
+    {q:"What does travel do to the mind, according to the passage?", opts:["It narrows it","It broadens it","It has no effect","It confuses it permanently"], c:1},
+    {q:"What is culture shock?", opts:["A type of souvenir","A feeling of confusion caused by unfamiliar customs","A travel document","A kind of itinerary"], c:1},
+    {q:"How do travellers usually overcome culture shock?", opts:["By avoiding local people","By immersing themselves in daily life","By staying in their hotel room","By returning home immediately"], c:1},
+    {q:"What is an itinerary?", opts:["A small object collected as a memory","A list of cities and sights to visit","A type of food","A form of transport"], c:1},
+    {q:"Why do travellers collect souvenirs?", opts:["To sell them later","To bring back memories of the journey","To avoid culture shock","To plan their itinerary"], c:1}
+  ]
+},
+{
+  id:'r4', type:'reading', icon:'🤖', kicker:'Reading 4', title:'Artificial Intelligence in Daily Life',
+  arTitle:'الذكاء الاصطناعي في الحياة اليومية',
+  paragraphs:[
+    "Artificial intelligence, once a subject found only in science fiction, now quietly shapes many parts of everyday life. Every time a phone suggests the next word in a sentence, or a streaming service recommends a film, an [[algorithm|خوارزمية]] is working behind the scenes, analysing patterns and predicting what a person might want next.",
+    "For many people, these tools have made daily tasks far more [[convenient|مريح وعملي]]. Voice assistants can set reminders, smart maps can find the fastest route through busy traffic, and translation apps can turn a foreign menu into an [[efficient|فعّال]], understandable list of dishes within seconds. Tasks that once took real effort now happen almost instantly.",
+    "Yet this growing [[reliance|اعتماد]] on technology also raises questions. If people stop practising basic skills, from remembering phone numbers to reading paper maps, will those abilities eventually disappear? Supporters argue that every major [[innovation|ابتكار]] in history, from the printing press to the calculator, sparked similar fears, and that society always adapts. What is certain is that artificial intelligence is not a distant future technology anymore; it is already woven into the fabric of ordinary life."
+  ],
+  vocab:[
+    ['algorithm','خوارزمية'],['convenient','مريح وعملي'],['efficient','فعّال'],['reliance','اعتماد'],['innovation','ابتكار']
+  ],
+  questions:[
+    {q:"What works behind the scenes when a phone suggests the next word?", opts:["A translator","An algorithm","A voice assistant only","A paper map"], c:1},
+    {q:"What have AI tools made many daily tasks?", opts:["More difficult","More convenient","More expensive","Slower"], c:1},
+    {q:"What question does the growing reliance on technology raise?", opts:["Whether basic skills might disappear","Whether phones are too cheap","Whether maps are inaccurate","Whether translation apps are free"], c:0},
+    {q:"What do supporters compare AI to historically?", opts:["The telephone only","Major innovations like the printing press","Ancient books","Paper maps"], c:1},
+    {q:"According to the passage, is AI a distant future technology?", opts:["Yes, it hasn't arrived yet","No, it is already part of ordinary life","Yes, only in science fiction","It is banned in most countries"], c:1}
+  ]
+},
+{
+  id:'c1', type:'conversation', icon:'🗂️', kicker:'Conversation 1', title:'Job Interview',
+  arTitle:'مقابلة عمل',
+  lines:[
+    ["Interviewer","Good morning, Ahmed. Thank you for coming in today. Could you start by telling me about your main [[strengths|نقاط قوة]]?"],
+    ["Ahmed","Good morning. Of course. I would say my greatest strength is my ability to stay [[confident|واثق]] under pressure, especially when deadlines are tight."],
+    ["Interviewer","That's good to hear. And what about areas you feel you need to improve, your [[weaknesses|نقاط ضعف]]?"],
+    ["Ahmed","Honestly, I sometimes find it difficult to delegate tasks. I like to control every detail myself, but I am learning to trust my team more."],
+    ["Interviewer","That's a very honest answer. Can you tell me about an [[achievement|إنجاز]] you are especially proud of?"],
+    ["Ahmed","Yes, last year I led a project that increased our department's efficiency by twenty percent, which was recognised by senior management."],
+    ["Interviewer","Impressive. Now, looking at your [[qualifications|مؤهلات]], I see you studied business administration. How does that connect to this role?"],
+    ["Ahmed","My degree gave me a strong foundation in management and finance, which I believe will help me handle the responsibilities of this position well."],
+    ["Interviewer","Thank you, Ahmed. We will be in touch within the week regarding our decision."],
+    ["Ahmed","Thank you very much for your time today."]
+  ],
+  vocab:[
+    ['strengths','نقاط قوة'],['confident','واثق'],['weaknesses','نقاط ضعف'],['achievement','إنجاز'],['qualifications','مؤهلات']
+  ],
+  questions:[
+    {q:"What does Ahmed say is his greatest strength?", opts:["Working alone","Staying confident under pressure","Avoiding deadlines","Delegating everything"], c:1},
+    {q:"What weakness does Ahmed mention?", opts:["Being late often","Difficulty delegating tasks","Poor communication","Lack of experience"], c:1},
+    {q:"What achievement does Ahmed describe?", opts:["Winning an award","Leading a project that increased efficiency by 20%","Studying abroad","Managing a large team of 100"], c:1},
+    {q:"What did Ahmed study?", opts:["Engineering","Business administration","Medicine","Law"], c:1},
+    {q:"When will the interviewer contact Ahmed?", opts:["Immediately","Within the week","Next month","Never"], c:1}
+  ]
+},
+{
+  id:'c2', type:'conversation', icon:'🩺', kicker:'Conversation 2', title:"At the Doctor's",
+  arTitle:'عند الطبيب',
+  lines:[
+    ["Doctor","Good afternoon. What seems to be the problem today?"],
+    ["Salma","I have had a headache and a sore throat for three days now. I also feel quite tired."],
+    ["Doctor","I see. Are there any other [[symptoms|أعراض]] you have noticed, such as a fever or a cough?"],
+    ["Salma","Yes, actually, I checked my temperature this morning and it was a little high."],
+    ["Doctor","Alright. Let me examine your throat first... Based on what I can see, it looks like a mild infection. I will [[prescribe|يصف دواء]] some antibiotics for you."],
+    ["Salma","How long will it take before I start to feel better?"],
+    ["Doctor","Most patients begin to [[recover|يتعافى]] within four or five days, as long as you finish the full course of medicine and get plenty of rest."],
+    ["Salma","Understood. Should I come back for another [[appointment|موعد]]?"],
+    ["Doctor","Only if the symptoms have not improved after a week. Here is your [[diagnosis|تشخيص]] written down, along with the prescription."],
+    ["Salma","Thank you very much, doctor."]
+  ],
+  vocab:[
+    ['symptoms','أعراض'],['prescribe','يصف دواء'],['recover','يتعافى'],['appointment','موعد'],['diagnosis','تشخيص']
+  ],
+  questions:[
+    {q:"How long has Salma had a headache and sore throat?", opts:["One day","Three days","A week","A month"], c:1},
+    {q:"What does the doctor prescribe?", opts:["Vitamins","Antibiotics","Painkillers only","Nothing"], c:1},
+    {q:"When does the doctor say most patients recover?", opts:["Within one day","Within four or five days","Within a month","Never"], c:1},
+    {q:"When should Salma come back for another appointment?", opts:["The next day","Only if symptoms haven't improved after a week","Every day","Never"], c:1},
+    {q:"What does the doctor give Salma along with the prescription?", opts:["A referral","Her written diagnosis","A vaccination","A new appointment card only"], c:1}
+  ]
+},
+{
+  id:'c3', type:'conversation', icon:'✈️', kicker:'Conversation 3', title:'Planning a Trip',
+  arTitle:'التخطيط لرحلة',
+  lines:[
+    ["Laila","I have been thinking about our summer trip. Have you decided on a [[destination|وجهة]] yet?"],
+    ["Omar","I was hoping we could go somewhere in Southeast Asia, maybe Vietnam or Thailand."],
+    ["Laila","That sounds exciting! But we need to think carefully about our [[budget|ميزانية]] first. Flights alone could be expensive."],
+    ["Omar","True. I found a website that compares [[accommodation|إقامة]] prices, hotels, hostels, even small apartments. Some are surprisingly affordable."],
+    ["Laila","Good, let's compare a few options. We should also make a [[reservation|حجز]] soon, before the good places are fully booked."],
+    ["Omar","Agreed. And besides the cities, I would love to plan a small [[excursion|رحلة قصيرة]] outside the capital, maybe to the countryside or the coast."],
+    ["Laila","Perfect. Let's also write down a rough plan so we don't waste time deciding each day once we arrive."],
+    ["Omar","Great idea. I'll start researching accommodation tonight and send you the links."]
+  ],
+  vocab:[
+    ['destination','وجهة'],['budget','ميزانية'],['accommodation','إقامة'],['reservation','حجز'],['excursion','رحلة قصيرة']
+  ],
+  questions:[
+    {q:"What destinations does Omar suggest?", opts:["Vietnam or Thailand","France or Spain","Japan or Korea","Egypt or Morocco"], c:0},
+    {q:"What does Laila say they need to think about carefully?", opts:["The weather","Their budget","Their passports","The food"], c:1},
+    {q:"What kind of website did Omar find?", opts:["A weather website","A website that compares accommodation prices","A cooking website","A news website"], c:1},
+    {q:"Why should they make a reservation soon?", opts:["Prices never change","Good places may get fully booked","It's required by law","Reservations are free only today"], c:1},
+    {q:"What kind of excursion does Omar want to plan?", opts:["A trip to another continent","A short trip outside the capital","A trip to the airport only","No excursion at all"], c:1}
+  ]
+},
+{
+  id:'c4', type:'conversation', icon:'🍽️', kicker:'Conversation 4', title:'Ordering at a Restaurant',
+  arTitle:'الطلب في مطعم',
+  lines:[
+    ["Waiter","Good evening, welcome. Would you like me to [[recommend|يوصي]] something from our menu tonight?"],
+    ["Nour","Yes, please. I'm not very familiar with this cuisine."],
+    ["Waiter","Our chef's special [[appetizer|مقبلات]] tonight is a spiced lentil soup, very popular with our guests."],
+    ["Nour","That sounds nice. Actually, I should mention I'm [[allergic|لدي حساسية]] to nuts, so please make sure the dishes don't contain any."],
+    ["Waiter","Thank you for letting me know, I'll inform the kitchen right away. For the main course, I'd suggest the grilled fish, it comes with a generous [[portion|حصة]] of vegetables."],
+    ["Nour","Perfect, I'll have that. And could I get a cold [[beverage|مشروب]] as well, something without sugar if possible?"],
+    ["Waiter","Of course, we have fresh lemon mint or sparkling water."],
+    ["Nour","Lemon mint sounds great, thank you."],
+    ["Waiter","My pleasure. I'll bring your order shortly."]
+  ],
+  vocab:[
+    ['recommend','يوصي'],['appetizer','مقبلات'],['allergic','لدي حساسية'],['portion','حصة'],['beverage','مشروب']
+  ],
+  questions:[
+    {q:"What does the waiter offer to do at the start?", opts:["Bring the bill","Recommend something from the menu","Cancel the order","Close the restaurant"], c:1},
+    {q:"What is the chef's special appetizer tonight?", opts:["Grilled fish","Spiced lentil soup","Lemon mint drink","Sparkling water"], c:1},
+    {q:"What is Nour allergic to?", opts:["Fish","Nuts","Vegetables","Lemon"], c:1},
+    {q:"What does the main course, grilled fish, come with?", opts:["A generous portion of vegetables","No side dishes","Only bread","Extra soup"], c:0},
+    {q:"What beverage does Nour choose?", opts:["Sparkling water","Lemon mint","Coffee","Tea"], c:1}
+  ]
+}
+];
+
+/* ================= STATE ================= */
+const state = { current:'home', results:{} };
+
+/* ================= RENDER TABS ================= */
+function renderTabs(){
+  const wrap = document.getElementById('tabsScroll');
+  let html = `<div class="tab-btn ${state.current==='home'?'active':''}" data-id="home">
+                <span class="tab-icon">🏠</span> Home</div>`;
+  UNITS.forEach(u=>{
+    const done = state.results[u.id];
+    html += `<div class="tab-btn ${state.current===u.id?'active':''}" data-id="${u.id}">
+        <span class="tab-icon">${u.icon}</span> ${u.title}
+        ${done? '<span class="tab-stamp">✓</span>':''}
+      </div>`;
+  });
+  html += `<div class="tab-btn ${state.current==='vocab'?'active':''}" data-id="vocab">
+              <span class="tab-icon">📖</span> Vocabulary Bank</div>`;
+  wrap.innerHTML = html;
+  wrap.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ state.current = btn.dataset.id; render(); window.scrollTo({top:0, behavior:'smooth'}); });
+  });
+}
+
+/* ================= SPEECH + POPUP ================= */
+function speakAndShow(el){
+  const en = el.dataset.en, ar = el.dataset.ar;
+  document.getElementById('popupEn').textContent = en;
+  document.getElementById('popupAr').textContent = ar;
+  const pop = document.getElementById('popup');
+  const rect = el.getBoundingClientRect();
+  pop.style.left = Math.max(10, rect.left) + 'px';
+  pop.style.top = (rect.top - 64 + window.scrollY) + 'px';
+  pop.style.display = 'block';
+  clearTimeout(window._popTimer);
+  window._popTimer = setTimeout(()=>{ pop.style.display='none'; }, 2600);
+
+  document.querySelectorAll('.vocab-word.playing').forEach(x=>x.classList.remove('playing'));
+  el.classList.add('playing');
+
+  if('speechSynthesis' in window){
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(en);
+    u.lang = 'en-US';
+    u.rate = 0.88;
+    u.onend = ()=> el.classList.remove('playing');
+    window.speechSynthesis.speak(u);
+  }
+}
+
+function attachVocabHandlers(container){
+  container.querySelectorAll('.vocab-word').forEach(el=>{
+    el.addEventListener('click', ()=> speakAndShow(el));
+  });
+}
+
+/* ================= RENDER HOME ================= */
+function renderHome(){
+  const doneCount = Object.keys(state.results).length;
+  document.getElementById('progressCount').textContent = doneCount + ' / 8';
+  let stamps = UNITS.map(u=>{
+    const r = state.results[u.id];
+    return `<div class="stamp-slot ${r?'done':''}" data-id="${u.id}">
+      <span class="ic">${u.icon}</span>
+      <div class="lbl">${u.title}</div>
+      ${r? `<div class="score">${r.score}/${r.total} ✓</div>` : '<div class="score" style="color:#a99a6b;">Not started</div>'}
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="home-card">
+    <div class="eyebrow" style="color:var(--sky-deep); font-weight:800; letter-spacing:.1em; text-transform:uppercase; font-size:12px;">Your Passport</div>
+    <h2>Welcome to your world tour of English 🌍</h2>
+    <p class="lead">Collect a stamp for every reading and conversation you complete. Tap any coloured word inside a lesson to hear it spoken aloud and see its Arabic meaning.<br>
+    <span class="ar">اضغط على أي وحدة من الوحدات الثمانية أدناه لبدء الدرس، واجمع ختمًا لكل درس تُنهيه.</span></p>
+    <div class="stamp-grid">${stamps}</div>
+  </div>`;
+}
+
+/* ================= RENDER VOCAB BANK ================= */
+function renderVocabBank(){
+  let all = [];
+  UNITS.forEach(u=> u.vocab.forEach(v=> all.push(v)));
+  let chips = all.map(v=>`<div class="vocab-chip vocab-word" data-en="${v[0]}" data-ar="${v[1]}">
+      <div class="w">${v[0]}</div><div class="a ar">${v[1]}</div>
+    </div>`).join('');
+  return `<div class="unit">
+    <div class="unit-head"><div class="badge">📖</div>
+      <div><div class="kicker">Full word list</div><h2>Vocabulary Bank</h2>
+      <div class="ar-title ar">كل كلمات الدرس في مكان واحد — اضغط لسماع النطق والمعنى</div></div>
+    </div>
+    <div class="vocab-list">${chips}</div>
+  </div>`;
+}
+
+/* ================= RENDER UNIT ================= */
+function renderUnit(u){
+  const isConv = u.type === 'conversation';
+  let bodyHtml = '';
+  if(isConv){
+    bodyHtml = u.lines.map(l=>`<div class="line"><span class="speaker">${l[0]}:</span><span>${md(l[1])}</span></div>`).join('');
+  } else {
+    bodyHtml = u.paragraphs.map(p=>`<p>${md(p)}</p>`).join('');
+  }
+
+  const vocabHtml = u.vocab.map(v=>`<div class="vocab-chip vocab-word" data-en="${v[0]}" data-ar="${v[1]}">
+      <div class="w">${v[0]}</div><div class="a ar">${v[1]}</div>
+    </div>`).join('');
+
+  const qHtml = u.questions.map((q,qi)=>{
+    const opts = q.opts.map((o,oi)=>`
+      <label class="opt" data-qi="${qi}" data-oi="${oi}">
+        <input type="radio" name="q${qi}" value="${oi}"> <span>${o}</span>
+      </label>`).join('');
+    return `<div class="q-item" data-qi="${qi}">
+        <div class="q-text">${qi+1}. ${q.q}</div>
+        ${opts}
+      </div>`;
+  }).join('');
+
+  const idx = UNITS.findIndex(x=>x.id===u.id);
+  const prev = UNITS[idx-1], next = UNITS[idx+1];
+
+  return `<div class="unit">
+    <div class="unit-head ${isConv?'conv':''}">
+      <div class="badge">${u.icon}</div>
+      <div>
+        <div class="kicker">${u.kicker} · ${isConv?'Conversation':'Reading'}</div>
+        <h2>${u.title}</h2>
+        <div class="ar-title ar">${u.arTitle}</div>
+      </div>
+    </div>
+    <div class="hint-bar">🔊 <span>Tap any <b style="color:var(--coral-deep)">coloured word</b> to hear it and see its Arabic meaning.</span></div>
+    <div class="passage">${bodyHtml}</div>
+
+    <div class="section-title"><span class="dot"></span>Key Vocabulary</div>
+    <div class="vocab-list">${vocabHtml}</div>
+
+    <div class="section-title"><span class="dot"></span>Quiz — check your understanding</div>
+    <div class="quiz" id="quizArea">${qHtml}</div>
+    <button class="check-btn" id="checkBtn">Check my answers</button>
+    <div class="result-banner" id="resultBanner"></div>
+
+    <div class="nav-footer">
+      <button class="foot-btn" ${prev?'':'disabled style="visibility:hidden"'} id="prevBtn">← ${prev? prev.title : ''}</button>
+      <button class="foot-btn" ${next?'':'disabled style="visibility:hidden"'} id="nextBtn">${next? next.title : ''} →</button>
+    </div>
+  </div>`;
+}
+
+/* ================= MAIN RENDER ================= */
+function render(){
+  renderTabs();
+  const main = document.getElementById('mainArea');
+  if(state.current === 'home'){
+    main.innerHTML = renderHome();
+    main.querySelectorAll('.stamp-slot').forEach(s=>{
+      s.addEventListener('click', ()=>{ state.current = s.dataset.id; render(); window.scrollTo({top:0,behavior:'smooth'}); });
+    });
+    return;
+  }
+  if(state.current === 'vocab'){
+    main.innerHTML = renderVocabBank();
+    attachVocabHandlers(main);
+    return;
+  }
+  const u = UNITS.find(x=>x.id===state.current);
+  if(!u){ state.current='home'; render(); return; }
+  main.innerHTML = renderUnit(u);
+  attachVocabHandlers(main);
+
+  // option selection styling
+  main.querySelectorAll('.opt').forEach(o=>{
+    o.addEventListener('click', ()=>{
+      const qi = o.dataset.qi;
+      main.querySelectorAll(`.opt[data-qi="${qi}"]`).forEach(x=>x.querySelector('input').checked = (x===o));
+    });
+  });
+
+  document.getElementById('checkBtn').addEventListener('click', ()=>{
+    let score = 0;
+    u.questions.forEach((q,qi)=>{
+      const opts = main.querySelectorAll(`.opt[data-qi="${qi}"]`);
+      let chosen = -1;
+      opts.forEach((o,oi)=>{ if(o.querySelector('input').checked) chosen = oi; });
+      opts.forEach((o,oi)=>{
+        o.classList.remove('correct','wrong');
+        if(oi === q.c) o.classList.add('correct');
+        else if(oi === chosen) o.classList.add('wrong');
+      });
+      if(chosen === q.c) score++;
+    });
+    state.results[u.id] = { score, total: u.questions.length };
+    const banner = document.getElementById('resultBanner');
+    banner.classList.add('show');
+    banner.classList.remove('good','mid','low');
+    const pct = score / u.questions.length;
+    let msg;
+    if(pct === 1){ banner.classList.add('good'); msg = `🎉 Perfect! ${score}/${u.questions.length} — passport stamp earned!`; }
+    else if(pct >= 0.6){ banner.classList.add('mid'); msg = `👍 Good job — ${score}/${u.questions.length}. Review the passage and try again for a perfect score.`; }
+    else { banner.classList.add('low'); msg = `📖 ${score}/${u.questions.length} — re-read the passage above, then try once more.`; }
+    banner.textContent = msg;
+    renderTabs();
+  });
+
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const idx = UNITS.findIndex(x=>x.id===u.id);
+  if(prevBtn && UNITS[idx-1]) prevBtn.addEventListener('click', ()=>{ state.current = UNITS[idx-1].id; render(); window.scrollTo({top:0,behavior:'smooth'}); });
+  if(nextBtn && UNITS[idx+1]) nextBtn.addEventListener('click', ()=>{ state.current = UNITS[idx+1].id; render(); window.scrollTo({top:0,behavior:'smooth'}); });
+}
+
+render();
+</script>
+</body>
+</html>
